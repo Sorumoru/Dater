@@ -21,6 +21,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 public class MainActivity extends AppCompatActivity {
 
+    // test change
     private static final String TAG = "MainActivity";
     TextView textViewUsername, textViewEmail;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
