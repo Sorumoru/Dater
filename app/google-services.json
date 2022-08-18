@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "945372405766",
+    "project_id": "dater-1e216",
+    "storage_bucket": "dater-1e216.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:945372405766:android:aa3a006d09c8ef1204a387",
+        "android_client_info": {
+          "package_name": "com.example.dater"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "945372405766-8vtt5brtspcosp0aip008n33e179t4ir.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAcwtVdVJc9TWNzBrhXa7W8r1KHhAkj2hc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "945372405766-8vtt5brtspcosp0aip008n33e179t4ir.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
