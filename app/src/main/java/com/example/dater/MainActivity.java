@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -13,6 +14,9 @@ import android.widget.TextView;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.bottomnavigation.BottomNavigationItemView;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationBarView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
@@ -21,11 +25,12 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 public class MainActivity extends AppCompatActivity {
 
-    // test change
     private static final String TAG = "MainActivity";
     TextView textViewUsername, textViewEmail;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     User user;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,23 +46,6 @@ public class MainActivity extends AppCompatActivity {
         } else {
 
             DocumentReference docRef = db.collection("users").document(currentUser.getUid());
-//            docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-//                @Override
-//                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-//                    Log.d(TAG, "User ID: " + currentUser.getUid());
-//                    if (task.isSuccessful()) {
-//                        DocumentSnapshot document = task.getResult();
-//                        assert document != null;
-//                        if (document.exists()) {
-//                            Log.d(TAG, "DocumentSnapshot data: " + document.getData());
-//                        } else {
-//                            Log.d(TAG, "No such document");
-//                        }
-//                    } else {
-//                        Log.d(TAG, "get failed with ", task.getException());
-//                    }
-//                }
-//            });
             docRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                 @Override
                 public void onSuccess(DocumentSnapshot documentSnapshot) {
@@ -80,8 +68,27 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+        bottomNavigationView.setSelectedItemId(R.id.page_2);
 
+        TextView dummytext = findViewById(R.id.textView9);
+        bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                if (item.getItemId() == R.id.page_1) {
+                    dummytext.setText("WUBALUBADUBDUB");
+                    return true;
+                } else if (item.getItemId() == R.id.page_2) {
+                    dummytext.setText("I don't give a fuck");
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        });
     }
+
+
 
     private void logoutUser() {
         FirebaseAuth.getInstance().signOut();
