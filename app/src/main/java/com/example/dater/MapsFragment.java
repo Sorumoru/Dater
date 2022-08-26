@@ -16,9 +16,39 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+
+import android.annotation.SuppressLint;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.maps.android.clustering.ClusterManager;
+
+import java.util.ArrayList;
+import java.util.Objects;
+
 public class MapsFragment extends Fragment {
 
-    private OnMapReadyCallback callback = new OnMapReadyCallback() {
+    FirebaseFirestore db;
+    private ClusterManager<Spot> clusterManager;
+    ArrayList<Spot> spots = new ArrayList<>();
+
+    private final OnMapReadyCallback callback = new OnMapReadyCallback() {
 
         /**
          * Manipulates the map once available.
@@ -30,12 +60,64 @@ public class MapsFragment extends Fragment {
          * user has installed Google Play services and returned to the app.
          */
         @Override
-        public void onMapReady(GoogleMap googleMap) {
+        public void onMapReady(@NonNull GoogleMap googleMap) {
+            db = FirebaseFirestore.getInstance();
+            setUpClusterManager(googleMap);
+
             LatLng sydney = new LatLng(-34, 151);
             googleMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
             googleMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+
+            googleMap.setOnMapClickListener (point -> {
+                // googleMap.clear(); // check if it clears map
+                Marker marker = googleMap.addMarker (new MarkerOptions().position(point));
+
+                assert marker != null;
+                ( (MainActivity) requireActivity()).setLatitude(marker.getPosition().latitude);
+                ( (MainActivity) requireActivity()).setLongitude(marker.getPosition().longitude);
+            });
+
         }
     };
+
+    @SuppressLint("PotentialBehaviorOverride")
+    private void setUpClusterManager(GoogleMap googleMap) {
+        clusterManager = new ClusterManager<>(requireActivity(), googleMap);
+
+        googleMap.setOnCameraIdleListener(clusterManager);
+        googleMap.setOnMarkerClickListener(clusterManager);
+
+        addSpots();
+    }
+
+    private void addSpots() {
+        db.collection("spots").
+                get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        for (QueryDocumentSnapshot document :
+                                Objects.requireNonNull(task.getResult())) {
+                            Log.d("Debug", document.getData().toString());
+                            Spot spot = new Spot(
+                                    Objects.requireNonNull(
+                                            document.getData().get("title")).toString(),
+                                    Double.parseDouble(Objects.requireNonNull(
+                                            document.getData().get("latitude")).toString()),
+                                    Double.parseDouble(Objects.requireNonNull(
+                                            document.getData().get("longitude")).toString()),
+                                    Objects.requireNonNull(
+                                            document.getData().get("snippet")).toString(),
+                                    Objects.requireNonNull(
+                                            document.getData().get("description")).toString());
+                            spots.add(spot);
+                            clusterManager.addItem(spot);Log.d(
+                                    "Debug", "New Spot added to list");
+                        }
+                    } else {
+                        Log.w("Debug", "Error getting documents.", task.getException());
+                    }
+                });
+    }
 
     @Nullable
     @Override

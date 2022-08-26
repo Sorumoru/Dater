@@ -16,4 +16,12 @@
     <string name="user">User</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <!-- from project spotr -->
+    <string name="addSpot_locationCoordinates">Location: %s, %s</string>
+    <string name="addSpot_nameHint">Enter name of Spot</string>
+    <string name="addSpot_add">Add Spot</string>
+    <string name="addSpot_snippet">Add a Short Description…</string>
+    <string name="addSpot_description">Add Description…</string>
+
 </resources>

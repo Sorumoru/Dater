@@ -24,7 +24,14 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.android.gms.maps.SupportMapFragment;
+
 public class MainActivity extends AppCompatActivity {
+
+    public static final String LATITUDE = "com.example.dater_latitude";
+    public static final String LONGITUDE = "com.example.dater_longitude";
+
+    double latitude = 0;
+    double longitude = 0;
 
     private static final String TAG = "MainActivity";
     TextView textViewUsername, textViewEmail;
@@ -38,27 +45,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        FirebaseAuth auth = FirebaseAuth.getInstance();
-        FirebaseUser currentUser = auth.getCurrentUser();
-        if (currentUser == null) {
-            Intent intent = new Intent(this, LoginActivity.class);
-            startActivity(intent);
-            finish();
-        } else {
-
-            DocumentReference docRef = db.collection("users").document(currentUser.getUid());
-            docRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                @Override
-                public void onSuccess(DocumentSnapshot documentSnapshot) {
-                    user = documentSnapshot.toObject(User.class);
-//                    textViewUsername = findViewById(R.id.textView_main_test);
-//                    textViewEmail = findViewById(R.id.textView_main_test2);
-//
-//                    textViewUsername.setText(user.getUsername());
-//                    textViewEmail.setText(user.getEmail());
-                }
-            });
-        }
+        authenticateUser();
 
 //        Button buttonLogout = findViewById(R.id.button_main_logoutButton);
 //        buttonLogout.setOnClickListener(new View.OnClickListener() {
@@ -69,6 +56,24 @@ public class MainActivity extends AppCompatActivity {
 //            }
 //        });
 
+        Button addButton = findViewById(R.id.button_main_add);
+        addButton.setOnClickListener(view -> {
+
+            Intent intent = new Intent(MainActivity.this, AddSpotActivity.class);
+            Bundle bundle = new Bundle();
+
+            bundle.putDouble(LATITUDE, latitude);
+            bundle.putDouble(LONGITUDE, longitude);
+            intent.putExtras(bundle);
+            startActivity(intent);
+        });
+        bottomNavigation();
+    }
+
+    public void setLatitude(double latitude) { this.latitude = latitude; }
+    public void setLongitude(double longitude) { this.longitude = longitude; }
+
+    private void bottomNavigation() {
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
         bottomNavigationView.setSelectedItemId(R.id.page_2);
 
@@ -106,8 +111,24 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+    private void authenticateUser() {
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        FirebaseUser currentUser = auth.getCurrentUser();
+        if (currentUser == null) {
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivity(intent);
+            finish();
+        } else {
 
-
+            DocumentReference docRef = db.collection("users").document(currentUser.getUid());
+            docRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                @Override
+                public void onSuccess(DocumentSnapshot documentSnapshot) {
+                    user = documentSnapshot.toObject(User.class);
+                }
+            });
+        }
+    }
 
     private void logoutUser() {
         FirebaseAuth.getInstance().signOut();

@@ -8,11 +8,17 @@
     tools:context=".MainActivity">
 
 
+    <Button
+        android:id="@+id/button_main_add"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Button" />
+
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fragmentContainerView_main_containerView"
         android:name="com.example.dater.MapsFragment"
         android:layout_width="match_parent"
-        android:layout_height="545dp" />
+        android:layout_height="match_parent" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation"
