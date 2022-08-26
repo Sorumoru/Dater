@@ -13,6 +13,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Dater"
         tools:targetApi="31">
+
+        <!-- https://developers.google.com/maps/documentation/android-sdk/get-api-key -->
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="${MAPS_API_KEY}" />
+
         <activity
             android:name=".RegisterActivity"
             android:exported="false" />

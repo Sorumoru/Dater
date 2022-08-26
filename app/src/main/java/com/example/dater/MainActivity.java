@@ -23,7 +23,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-
+import com.google.android.gms.maps.SupportMapFragment;
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
@@ -80,7 +80,6 @@ public class MainActivity extends AppCompatActivity {
                 FragmentManager fragmentManager = getSupportFragmentManager();
 
                 if (item.getItemId() == R.id.page_1) {
-                    //dummytext.setText("WUBALUBADUBDUB");
                     fragmentManager.beginTransaction()
                             .replace(R.id.fragmentContainerView_main_containerView, BookmarkFragment.class, null)
                             .setReorderingAllowed(true)
@@ -88,9 +87,8 @@ public class MainActivity extends AppCompatActivity {
                             .commit();
                     return true;
                 } else if (item.getItemId() == R.id.page_2) {
-                    //dummytext.setText("I don't give a fuck");
                     fragmentManager.beginTransaction()
-                            .replace(R.id.fragmentContainerView_main_containerView, MapFragment.class, null)
+                            .replace(R.id.fragmentContainerView_main_containerView, MapsFragment.class, null)
                             .setReorderingAllowed(true)
                             .addToBackStack("name")
                             .commit();
